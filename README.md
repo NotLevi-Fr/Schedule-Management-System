@@ -11,7 +11,7 @@ I am building this project for myself so that I can do what I want I acn on on m
 # Features & Roadmap
 - [x] Basic 
 - [x] Basic functions
-- [/] Database integration (In Progress)
+- [ ] Database integration (In Progress)
 - [ ] Dark mode toggle (Planned)
 - [ ] User authentication and login(Planned)
 
