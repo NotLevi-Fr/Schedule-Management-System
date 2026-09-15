@@ -16,6 +16,6 @@ I am building this project for myself so that I can do what I want I acn on on m
 - [ ] User authentication and login(Planned)
 
 # Getting Started
-To run this project locally, clone the repository and install dependencies:
+To run this project locally, clone the repository:
 
 
