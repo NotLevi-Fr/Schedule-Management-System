@@ -216,3 +216,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+=======
+# Ignore a specific file
+schedule.txt
+REPORT.md
+
+# Ignore an entire folder (always end with a slash)
+
+
+# Ignore all files ending with a specific extension
+
+# Ignore all .env files, but do NOT ignore .env.example
+
