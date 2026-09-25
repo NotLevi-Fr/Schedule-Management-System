@@ -12,6 +12,7 @@ I am building this project for myself so that I can do what I want I acn on on m
 - [x] Basic 
 - [x] Basic functions
 - [ ] Database integration (In Progress)
+- [ ] GUI
 - [ ] Dark mode toggle (Planned)
 - [ ] User authentication and login(Planned)
 
