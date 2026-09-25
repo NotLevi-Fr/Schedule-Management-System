@@ -1,4 +1,4 @@
-import Controller.schedule as schedule
+import controller.schedule as schedule
 
 
 def main():
