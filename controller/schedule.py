@@ -1,5 +1,8 @@
-schedule_file = "schedules.txt"
-schedules = []
+from data.data import Database
+from features.schedule.model import Schedule
+from features.schedule.repository import ScheduleRepository
+
+repository = ScheduleRepository(Database())
 
 
 def get_schedule():
@@ -10,19 +13,11 @@ def get_schedule():
         time = input("Time (HH:MM): ")
         typ = input("Type (Ex. Activity/Exam): ")
         desc = input("Descripiton (Opitonal): ")
-        # color = input("Select a color: ")
         choose = input("\n1.Save \n2.Reenter \n3.Exit \n\nChoose: ")
 
         if choose == "1":
-            dat = {
-                "title": title,
-                "date": date,
-                "time": time,
-                "type": typ,
-                "desc": desc,
-            }
-            schedules.append(dat)
-            save_schedules()
+            repository.add(Schedule(title, date, time, typ, desc))
+            print("Saved.")
             break
         elif choose == "2":
             continue
@@ -43,10 +38,10 @@ def delete_schedule():
         remove = input("Select index to remove: ")
         try:
             remove = int(remove) - 1
+            schedules = repository.list()
             if 0 <= remove < len(schedules):
-                removed = schedules.pop(remove)
-                save_schedules()
-                print(f"Removed: {removed['title']}")
+                repository.delete(schedules[remove].id)
+                print(f"Removed: {schedules[remove].title}")
             else:
                 print("Index out of range.")
         except ValueError:
@@ -54,41 +49,11 @@ def delete_schedule():
 
 
 def show_schedule():
+    schedules = repository.list()
     if not schedules:
         print("No schedules found.")
         return
-    i = 0
-    for schedule in schedules:
+    for i, item in enumerate(schedules):
         print(
-            f"{i + 1}. {schedule['title']} | {schedule['date']} | {schedule['time']} | {schedule['type']} | {schedule['desc']}"
+            f"{i + 1}. {item.title} | {item.date} | {item.time} | {item.typ} | {item.desc}"
         )
-        i += 1
-
-
-def save_schedules():
-    with open(schedule_file, "w") as file:
-        for schedule in schedules:
-            file.write(
-                f"{schedule['title']}|{schedule['date']}|{schedule['time']}|{schedule['type']}|{schedule['desc']}\n"
-            )
-
-
-def load_schedules():
-    try:
-        with open(schedule_file, "r") as file:
-            for line in file:
-                title, date, time, typ, desc = line.strip().split("|")
-                schedules.append(
-                    {
-                        "title": title,
-                        "date": date,
-                        "time": time,
-                        "type": typ,
-                        "desc": desc,
-                    }
-                )
-    except FileNotFoundError:
-        print("No saved schedules found.")
-
-
-load_schedules()

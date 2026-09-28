@@ -19,5 +19,8 @@ class StudentService:
     def add(self, schedule: Schedule) -> Schedule:
         return self.repository.add(schedule)
 
+    def delete(self, schedule_id: int) -> None:
+        self.repository.delete(schedule_id)
+
     def list(self) -> list[Schedule]:
         return self.repository.list()
