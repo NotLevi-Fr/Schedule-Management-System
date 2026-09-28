@@ -14,11 +14,21 @@ class ScheduleRepository:
                 INSERT INTO schedule (title, date, time, type, desc)
                 VALUES (?, ?, ?, ?, ?)
                 """,
-                (schedule.title, schedule.date, schedule.time, schedule.typ, schedule.desc),
+                (
+                    schedule.title,
+                    schedule.date,
+                    schedule.time,
+                    schedule.typ,
+                    schedule.desc,
+                ),
             )
             schedule.id = cursor.lastrowid
 
         return schedule
+
+    def delete(self, schedule_id: int) -> None:
+        with self.database.connect() as connection:
+            connection.execute("DELETE FROM schedule WHERE id = ?", (schedule_id,))
 
     def list(self) -> list[Schedule]:
         with self.database.connect() as connection:
@@ -37,3 +47,4 @@ class ScheduleRepository:
             )
             for row in rows
         ]
+

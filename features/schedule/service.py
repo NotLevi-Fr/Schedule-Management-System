@@ -10,3 +10,14 @@ class ScheduleService:
 
     def add_schedule(self, schedule: Schedule) -> Schedule:
         return self.repository.add(schedule)
+
+
+class StudentService:
+    def __init__(self, database: Database):
+        self.repository = ScheduleRepository(database)
+
+    def add(self, schedule: Schedule) -> Schedule:
+        return self.repository.add(schedule)
+
+    def list(self) -> list[Schedule]:
+        return self.repository.list()

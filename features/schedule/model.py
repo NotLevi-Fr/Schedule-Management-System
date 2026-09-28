@@ -15,3 +15,4 @@ class Schedule:
         self.date = self.date.strip()
         self.typ = self.typ.strip()
         self.desc = self.desc.strip()
+
