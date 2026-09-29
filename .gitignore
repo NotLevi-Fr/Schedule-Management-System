@@ -220,7 +220,7 @@ __marimo__/
 # Ignore a specific file
 schedule.txt
 REPORT.md
-
+data/schedule.db
 # Ignore an entire folder (always end with a slash)
 
 
