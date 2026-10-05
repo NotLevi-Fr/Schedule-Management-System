@@ -1,6 +1,6 @@
 # Schedule Management System
 
-> **Status:** Working — add, view, update, and delete are done.
+> **Status:** Working. Add, view, update, and delete are done.
 > A desktop app for recording schedules and deadlines, stored in a local SQLite database.
 
 ---
@@ -19,19 +19,19 @@ It runs fully offline.
 The layering (Model → Repository → Service → View) exists for *modifiability*. Each part
 changes on its own:
 
-- Swap SQLite for PostgreSQL — edit only `data/data.py` and `features/schedule/repository.py`.
-- Swap PyQt6 for web or mobile — rewrite only the view layer; model, service, and database stay.
-- Change a schedule's fields — edit only `features/schedule/model.py`.
+- Swap SQLite for PostgreSQL: edit only `data/data.py` and `features/schedule/repository.py`.
+- Swap PyQt6 for web or mobile: rewrite only the view layer; model, service, and database stay.
+- Change a schedule's fields: edit only `features/schedule/model.py`.
 - Add the calendar view without breaking existing features.
 
-The goal is code that is easy to read, change, and learn from — not a finished product.
+The goal is code that is easy to read, change, and learn from, not a finished product.
 
 **3. Open source.**
 Public so anyone can read, copy, learn from, improve, or use as a starting point. Forks,
 issues, and pull requests are welcome.
 
 > **Licensing note:** there is no `LICENSE` file yet, so the code is publicly readable but
-> **not** formally licensed for reuse. To reuse or redistribute it, add a license —
+> **not** formally licensed for reuse. To reuse or redistribute it, add a license.
 > [MIT](https://opensource.org/license/mit) is the usual fit, since it allows modification
 > and reuse as long as the original credit is kept.
 
@@ -90,11 +90,11 @@ deleted, and reviewed at a glance.
 3. Apply **encapsulation, inheritance, and polymorphism** by separating the program into
    layers.
 4. Give each layer one clear responsibility:
-   - **Model** – holds the data of one schedule
-   - **Repository** – performs all SQL
-   - **Service** – business logic between GUI and database
-   - **View** – the graphical interface
-   - **Calendar** – the upcoming calendar and color coding feature
+   - **Model**: holds the data of one schedule
+   - **Repository**: performs all SQL
+   - **Service**: business logic between GUI and database
+   - **View**: the graphical interface
+   - **Calendar**: the upcoming calendar and color coding feature
 5. Use parameterized SQL to prevent SQL injection.
 6. Keep the interface usable without training.
 7. Give clear feedback through dialogs and warnings.
@@ -117,7 +117,7 @@ deleted, and reviewed at a glance.
 | 6 | **Calendar View** | Schedules appear as color-coded dates on a monthly calendar. Click a date to list that day's schedules in a table, sorted by time. |
 | 7 | **Color Coding** | Each schedule type gets its own color, so exams, quizzes, and activities are distinguishable at a glance. Days with mixed types turn grey. |
 
-The app has two tabs: **Schedules** (features 1–5) and **Calendar** (features 6–7).
+The app has two tabs: **Schedules** (features 1 to 5) and **Calendar** (features 6 to 7).
 
 ### Still planned
 
@@ -134,7 +134,7 @@ The app has two tabs: **Schedules** (features 1–5) and **Calendar** (features 
 | Category | Technology | Details |
 |----------|-----------|---------|
 | **Language** | Python 3 | Written and tested on 3.14.7 |
-| **GUI Framework** | PyQt6 | 6.11.0 — `QWidget`, `QLineEdit`, `QListWidget`, `QPushButton`, `QMessageBox`, `QVBoxLayout`, `QFormLayout` |
+| **GUI Framework** | PyQt6 | 6.11.0. Provides `QWidget`, `QLineEdit`, `QListWidget`, `QPushButton`, `QMessageBox`, `QVBoxLayout`, `QFormLayout` |
 | **Database** | SQLite3 | Built-in `sqlite3` module. File-based, no server. |
 | **Other Libraries** | `dataclasses` (stdlib) | Builds the `Schedule` model via `@dataclass` |
 | **Other Libraries** | `pathlib` (stdlib) | Builds the cross-platform path to `schedule.db` |
@@ -150,7 +150,7 @@ The app has two tabs: **Schedules** (features 1–5) and **Calendar** (features 
 ```
 ScheduleManagementSystem/
 │
-├── main.py                      # Entry point — creates Database, Service, View; starts Qt
+├── main.py                      # Entry point: creates Database, Service, View; starts Qt
 ├── README.md                    # This documentation
 ├── REPORT.md                    # Earlier command-line version report
 ├── requirements.txt             # Dependencies
@@ -161,7 +161,7 @@ ScheduleManagementSystem/
 │
 ├── data/                        # DATABASE LAYER
 │   ├── __init__.py
-│   ├── data.py                  # Database class — holds DB path, creates the table
+│   ├── data.py                  # Database class: holds DB path, creates the table
 │   └── schedule.db              # SQLite file (auto-created on first run)
 │
 ├── features/                    # FEATURE MODULES
@@ -169,18 +169,18 @@ ScheduleManagementSystem/
 │   ├── calendar/                # Calendar feature (implemented)
 │   │   ├── __init__.py          # Exports CalendarView, parse_date
 │   │   ├── colors.py            # Schedule type → color mapping, aliases, legend data
-│   │   ├── dates.py             # parse_date() — turns stored text into a real date
-│   │   └── view.py              # CalendarView — the calendar window with color coding
+│   │   ├── dates.py             # parse_date(): turns stored text into a real date
+│   │   └── view.py              # CalendarView: the calendar window with color coding
 │   └── schedule/                # Schedule feature
 │       ├── __init__.py
-│       ├── model.py             # Schedule dataclass — data of ONE schedule
-│       ├── repository.py        # ScheduleRepository — all SQL (Create/Read/Update/Delete)
-│       ├── service.py           # Service classes — business logic
+│       ├── model.py             # Schedule dataclass: data of ONE schedule
+│       ├── repository.py        # ScheduleRepository: all SQL (Create/Read/Update/Delete)
+│       ├── service.py           # Service classes: business logic
 │       └── view.py              # Unused early GUI attempt (superseded by view/)
 │
 └── view/                        # PRESENTATION LAYER
     ├── __init__.py              # Exports StudentView
-    └── student_view.py          # StudentView — the actual application window
+    └── student_view.py          # StudentView: the actual application window
 ```
 
 ### Purpose of each file
@@ -188,15 +188,15 @@ ScheduleManagementSystem/
 | File / Folder | Purpose |
 |---------------|---------|
 | `main.py` | Entry point. Builds the `Database`, `StudentService`, and `StudentView`, then starts the Qt loop. |
-| `controller/schedule.py` | The original command-line version. Reference only — its loop is commented out in `main.py`. |
+| `controller/schedule.py` | The original command-line version. Reference only, since its loop is commented out in `main.py`. |
 | `data/data.py` | `Database` class. Holds the DB path, opens connections, creates the table. |
-| `data/schedule.db` | The SQLite file storing all schedules. Auto-created — never edit by hand. |
+| `data/schedule.db` | The SQLite file storing all schedules. Auto-created. Never edit by hand. |
 | `features/schedule/model.py` | `Schedule` dataclass (`title`, `date`, `time`, `typ`, `desc`, `id`). Strips whitespace in `__post_init__`. |
 | `features/schedule/repository.py` | `ScheduleRepository`. Holds **all** SQL with parameterized queries. Converts rows into `Schedule` objects. |
 | `features/schedule/service.py` | Business logic. `ScheduleService` and `StudentService` pass GUI requests to the repository. |
 | `features/schedule/view.py` | Unfinished early GUI attempt with typos (`refrest()`, `sertHorizontalHeaderLabels`). **Not imported by `main.py`.** |
 | `view/student_view.py` | The real window (`StudentView`). Builds the form, buttons, and list; handles add/update/delete/refresh. |
-| `features/calendar/dates.py` | `parse_date()` — converts stored date text (`MM/DD/YYYY`) into a real `date`, returning `None` if it can't. |
+| `features/calendar/dates.py` | `parse_date()` converts stored date text (`MM/DD/YYYY`) into a real `date`, returning `None` if it can't. |
 | `features/calendar/colors.py` | Maps a schedule type to its background/foreground colors. Handles case, spacing, and aliases (`homework` → assignment). |
 | `features/calendar/view.py` | `CalendarView`. Builds the calendar, color-codes dates, and lists the selected day's schedules. |
 | `features/calendar/` | The calendar feature package. Depends on the existing model and database layers. |
@@ -266,7 +266,7 @@ sqlite3 data/schedule.db ".tables"
 
 ## How to Use the System
 
-1. **Start** — run `python main.py`. A *"Schedule Management System"* window opens
+1. **Start.** Run `python main.py`. A *"Schedule Management System"* window opens
    (420 × 480 px).
 
 2. **Add a schedule**
@@ -277,7 +277,7 @@ sqlite3 data/schedule.db ".tables"
    - **Description** (optional)
    - Click **Add Schedule**, or press `Enter` in the Title field
 
-3. **View** — saved schedules appear in the list at the bottom as
+3. **View.** Saved schedules appear in the list at the bottom as
    `Title | Date | Time | Type | Description`.
 
 4. **Update**
@@ -290,19 +290,19 @@ sqlite3 data/schedule.db ".tables"
    - Click **Delete Selected**.
    - Confirm in the dialog. **Yes** deletes, **No** cancels.
 
-6. **See the calendar** — click the **Calendar** tab.
+6. **See the calendar.** Click the **Calendar** tab.
    - Each date with a schedule is **color-coded by type** (see the legend at the bottom).
    - Dates with more than one schedule are **grey**, and hovering shows how many and which types.
    - Click any date to list that day's schedules below, sorted by time.
    - Use the arrows to move between months.
    - Changes made on the **Schedules** tab appear here automatically when you switch to this tab.
 
-7. **Quit** — close the window. Data is already saved.
+7. **Quit.** Close the window. Data is already saved.
 
 ### Tips
 
 - **Enter** in the Title field saves, so the whole form works by keyboard.
-- Dates are stored as text — always use `MM/DD/YYYY` and 24-hour `HH:MM` to keep entries
+- Dates are stored as text, so always use `MM/DD/YYYY` and 24-hour `HH:MM` to keep entries
   consistent.
 
 ---
@@ -355,7 +355,7 @@ Every layer keeps its own responsibility private and exposes a small public inte
   anywhere else, so the database can change without touching the GUI or service.
 
   ```python
-  # The GUI calls self.service.add(schedule) — it never sees SQL.
+  # The GUI calls self.service.add(schedule); it never sees SQL.
   def add(self, schedule: Schedule) -> Schedule:
       with self.database.connect() as connection:
           cursor = connection.execute(
@@ -383,7 +383,7 @@ Every layer keeps its own responsibility private and exposes a small public inte
 
 - **`CalendarView` encapsulates calendar state.** It owns the calendar widget, the grouping
   of schedules by day, and the set of dates it has already painted. `main.py` never has to
-  know that days are grouped or that colors must be cleared before repainting — it only
+  know that days are grouped or that colors must be cleared before repainting. It only
   constructs the view.
 
 - **`StudentView` encapsulates form state.** It owns its widgets, the `editing_id` flag,
@@ -404,19 +404,19 @@ Every layer keeps its own responsibility private and exposes a small public inte
           self.resize(420, 480)
   ```
 
-- **`CalendarView(QWidget)`** — inherits PyQt6's window, title bar, layout system, and
+- **`CalendarView(QWidget)`** inherits PyQt6's window, title bar, layout system, and
   ability to be shown, exactly like `StudentView`. Both tabs are plain `QWidget`
   subclasses placed inside a `QTabWidget`, which is why they can coexist.
 
-- **`ScheduleView(QWidget)`** — same pattern in the legacy view.
-- **`Bridge(QObject)`** — inherits `QObject` so it can own `pyqtSignal` objects.
-- **Implicit** — `ScheduleService`, `StudentService`, `ScheduleRepository`, and `Database`
+- **`ScheduleView(QWidget)`** uses the same pattern in the legacy view.
+- **`Bridge(QObject)`** inherits `QObject` so it can own `pyqtSignal` objects.
+- **Implicit.** `ScheduleService`, `StudentService`, `ScheduleRepository`, and `Database`
   all inherit Python's `object`.
 
 > **Honest note:** inheritance is used mainly for **GUI widgets**, which is correct in PyQt6.
 > The data layers are composed, not inherited (`has-a`): repository *has-a* `Database`,
 > service *has-a* repository, view *has-a* service. Deep hierarchies were deliberately
-> avoided — they aren't needed at this size.
+> avoided, because they aren't needed at this size.
 
 ### 3. Polymorphism
 
@@ -467,13 +467,13 @@ Every layer keeps its own responsibility private and exposes a small public inte
 ### Engine
 
 **SQLite3**, via Python's built-in `sqlite3`. Chosen because it needs no install, no server,
-and no config — the whole database is one file (`data/schedule.db`). That fits a personal,
+and no config. The whole database is one file (`data/schedule.db`). That fits a personal,
 single-user desktop app.
 
 ### Structure
 
 One table, created by `Database.create_table()` in `data/data.py` using
-`CREATE TABLE IF NOT EXISTS`. It's built automatically on first run — no manual setup.
+`CREATE TABLE IF NOT EXISTS`. It's built automatically on first run, so there is no manual setup.
 
 ```sql
 CREATE TABLE IF NOT EXISTS schedule (
@@ -491,13 +491,13 @@ CREATE TABLE IF NOT EXISTS schedule (
 | Column | Type | Constraint | Description |
 |--------|--------|------------|-------------|
 | `id` | INTEGER | **PRIMARY KEY AUTOINCREMENT** | Unique ID, auto-generated. Used for update and delete. |
-| `title` | TEXT | validated in GUI: not empty | Name of the schedule. |
-| `date` | TEXT | — | Entered as `MM/DD/YYYY`. |
-| `time` | TEXT | — | Entered as `HH:MM`. |
-| `type` | TEXT | — | Category: Exam, Activity, Assignment, Quiz, etc. |
-| `desc` | TEXT | — | Optional extra details. |
+| `title` | TEXT | validated in GUI, not empty | Name of the schedule. |
+| `date` | TEXT | none | Entered as `MM/DD/YYYY`. |
+| `time` | TEXT | none | Entered as `HH:MM`. |
+| `type` | TEXT | none | Category: Exam, Activity, Assignment, Quiz, etc. |
+| `desc` | TEXT | none | Optional extra details. |
 
-> **Why SQLite?** No install, no server, no config — one file. For a personal, offline,
+> **Why SQLite?** No install, no server, no config, just one file. For a personal, offline,
 > single-user tool it's the simplest option that's still a real relational database. Because
 > SQL is confined to the repository layer, moving to PostgreSQL or MySQL later is a change to
 > one file, not a rewrite.
@@ -524,15 +524,15 @@ CREATE TABLE IF NOT EXISTS schedule (
    .add() → INSERT     .update()/.delete() → WHERE id = ?
 ```
 
-No foreign keys — the system has one entity, so one table is enough.
+There are no foreign keys, because the system has a single entity and one table is enough.
 
 ### Operations
 
 All SQL lives in `features/schedule/repository.py`. Every statement uses **parameterized
-queries** (`?` placeholders), so user input is never treated as SQL — this prevents SQL
+queries** (`?` placeholders), so user input is never treated as SQL, which prevents SQL
 injection.
 
-#### CREATE — Add a schedule
+#### CREATE: Add a schedule
 Called by **Add Schedule**.
 
 ```python
@@ -546,7 +546,7 @@ cursor = connection.execute(
 schedule.id = cursor.lastrowid    # SQLite assigns the new primary key
 ```
 
-#### READ — Get one by ID
+#### READ: Get one by ID
 Called by **Update Selected** to fill the form.
 
 ```python
@@ -559,7 +559,7 @@ row = connection.execute(
 Returns `None` if no row matches, which the view reports as *"That schedule no longer
 exists"*.
 
-#### READ — List all
+#### READ: List all
 Called by `StudentView.refresh()` on startup and after every change.
 
 ```python
@@ -570,7 +570,7 @@ rows = connection.execute(
 
 Each row becomes a `Schedule`, so the GUI never handles raw tuples.
 
-#### UPDATE — Modify a schedule
+#### UPDATE: Modify a schedule
 Called by **Save Changes** while a record is loaded.
 
 ```python
@@ -584,7 +584,7 @@ connection.execute(
 )
 ```
 
-#### DELETE — Remove a schedule
+#### DELETE: Remove a schedule
 Called after the user confirms.
 
 ```python
@@ -612,24 +612,24 @@ Tracked under [Known Issues / Limitations](#known-issues--limitations).
 > ⚠️ **Action required:** every `[INSERT IMAGE: ...]` placeholder below must be replaced
 > with a real screenshot before submission. Run `python main.py` and capture the window.
 
-### Screenshot 1 — Startup
+### Screenshot 1: Startup
 
-`[INSERT IMAGE: the empty window on startup — Title, Date, Time, Type, Description fields; "Add Schedule", "Update Selected", "Delete Selected" buttons; empty Schedules list below.]`
+`[INSERT IMAGE: the empty window on startup. Title, Date, Time, Type, Description fields; "Add Schedule", "Update Selected", "Delete Selected" buttons; empty Schedules list below.]`
 
 *The window right after running `python main.py`. The table is created automatically and the
 list is empty because nothing has been added yet.*
 
 ---
 
-### Screenshot 2 — Adding a schedule
+### Screenshot 2: Adding a schedule
 
-`[INSERT IMAGE: the form filled with a sample entry — Title: "Calculus Final", Date: 05/20/2027, Time: 09:00, Type: Exam, Description: Room 301 — just before clicking "Add Schedule".]`
+`[INSERT IMAGE: the form filled with a sample entry (Title: "Calculus Final", Date: 05/20/2027, Time: 09:00, Type: Exam, Description: Room 301) just before clicking "Add Schedule".]`
 
 *The input form. Only the title is required; the rest shows a typical exam entry.*
 
 ---
 
-### Screenshot 3 — List populated
+### Screenshot 3: List populated
 
 `[INSERT IMAGE: the window after adding two or three schedules, showing the Schedules list displaying entries as "Title | Date | Time | Type | Description".]`
 
@@ -637,7 +637,7 @@ list is empty because nothing has been added yet.*
 
 ---
 
-### Screenshot 4 — Update mode
+### Screenshot 4: Update mode
 
 `[INSERT IMAGE: a schedule selected in the list, its values loaded into the form, and the left button changed from "Add Schedule" to "Save Changes".]`
 
@@ -646,7 +646,7 @@ the selected record, not create a new one.*
 
 ---
 
-### Screenshot 5 — Delete confirmation
+### Screenshot 5: Delete confirmation
 
 `[INSERT IMAGE: the "Delete schedule" dialog asking "Delete [schedule name]?" with Yes and No, over the main window.]`
 
@@ -654,7 +654,7 @@ the selected record, not create a new one.*
 
 ---
 
-### Screenshot 6 — Validation warning
+### Screenshot 6: Validation warning
 
 `[INSERT IMAGE: a "Missing title" warning after clicking "Add Schedule" with an empty Title field.]`
 
@@ -662,18 +662,18 @@ the selected record, not create a new one.*
 
 ---
 
-### Screenshot 7 — Calendar view with color coding
+### Screenshot 7: Calendar view with color coding
 
-`[INSERT IMAGE: the "Calendar" tab — a monthly calendar with schedule dates colored by type (for example a red exam date and a blue assignment date), a legend along the bottom, and the table below showing the selected day's schedules.]`
+`[INSERT IMAGE: the "Calendar" tab showing a monthly calendar with schedule dates colored by type (for example a red exam date and a blue assignment date), a legend along the bottom, and the table below showing the selected day's schedules.]`
 
 *The calendar tab. Each date is colored by its schedule type, grey means several types that day,
 and clicking a date lists its schedules sorted by time.*
 
 ---
 
-### Screenshot 8 — Day detail with legend
+### Screenshot 8: Day detail with legend
 
-`[INSERT IMAGE: a single date selected on the calendar, with the "Day, Month DD, YYYY — N schedule(s)" label and a table of Time / Type / Title / Description rows for that day, with the legend row visible.]`
+`[INSERT IMAGE: a single date selected on the calendar, with the "Day, Month DD, YYYY: N schedule(s)" label and a table of Time / Type / Title / Description rows for that day, with the legend row visible.]`
 
 *Selecting a date lists its schedules. Each row carries the same color as its calendar date, so
 the table and the calendar are read the same way.*
@@ -685,21 +685,21 @@ the table and the calendar are read the same way.*
 Two levels: **automated** testing of the database layer against a temp file, and **manual**
 GUI testing.
 
-### A. Automated — database layer
+### A. Automated: database layer
 
 Each test used a **temporary, isolated database file**, so the real `data/schedule.db` was
 never modified.
 
 | # | Feature | Steps | Expected | Actual |
 |---|---------|-------|----------|--------|
-| 1 | **Create** + whitespace cleanup | `repo.add(Schedule("  Calculus Final  ", ...))` | Spaces removed; `id` assigned | **PASS** — title `'Calculus Final'`, `id=1` |
-| 2 | **Read one** (`get`) | `repo.get(1)` | Returns the record | **PASS** — title `'Calculus Final'` |
-| 3 | **Read all** (`list`) | Add a 2nd record, then `repo.list()` | 2 records | **PASS** — exactly 2 returned |
-| 4 | **Search** (`LIKE`) | Filter titles containing `"final"` | 1 match | **PASS** — 1 match: `['Calculus Final']` |
-| 5 | **Update** | Set date to `05/21/2027`, `update()`, then `get()` | Date is `05/21/2027` | **PASS** — read back as `05/21/2027` |
-| 6 | **Delete** | `delete(1)`, then `get(1)` and `list()` | `get()` → `None`; 1 record left | **PASS** — `None`, 1 remained |
-| 7 | **Persistence** | Close app, reopen, view list | Records still present | **PASS** — loaded from `schedule.db` on startup |
-| 8 | **Table creation** | Delete the `.db` file, run again | Table rebuilt automatically | **PASS** — `CREATE TABLE IF NOT EXISTS` recreated it |
+| 1 | **Create** + whitespace cleanup | `repo.add(Schedule("  Calculus Final  ", ...))` | Spaces removed; `id` assigned | **PASS**: title `'Calculus Final'`, `id=1` |
+| 2 | **Read one** (`get`) | `repo.get(1)` | Returns the record | **PASS**: title `'Calculus Final'` |
+| 3 | **Read all** (`list`) | Add a 2nd record, then `repo.list()` | 2 records | **PASS**: exactly 2 returned |
+| 4 | **Search** (`LIKE`) | Filter titles containing `"final"` | 1 match | **PASS**: 1 match: `['Calculus Final']` |
+| 5 | **Update** | Set date to `05/21/2027`, `update()`, then `get()` | Date is `05/21/2027` | **PASS**: read back as `05/21/2027` |
+| 6 | **Delete** | `delete(1)`, then `get(1)` and `list()` | `get()` → `None`; 1 record left | **PASS**: `None`, 1 remained |
+| 7 | **Persistence** | Close app, reopen, view list | Records still present | **PASS**: loaded from `schedule.db` on startup |
+| 8 | **Table creation** | Delete the `.db` file, run again | Table rebuilt automatically | **PASS**: `CREATE TABLE IF NOT EXISTS` recreated it |
 
 ```
 TEST 1 CREATE    -> PASS  (title='Calculus Final', id=1)
@@ -711,36 +711,36 @@ TEST 6 DELETE    -> PASS  (get()=None, 1 record left)
 ALL REPOSITORY TESTS PASSED
 ```
 
-### B. Manual — GUI
+### B. Manual: GUI
 
 | # | Scenario | Steps | Expected | Actual |
 |---|----------|-------|----------|--------|
-| 1 | Add a schedule | Fill all fields → **Add Schedule** | Record appears in the list and persists | **PASS** — shown in list; present after restart |
-| 2 | Empty title | **Add Schedule** with blank Title | *"Missing title"* warning, nothing saved | **PASS** — warning shown, database unchanged |
-| 3 | Update | Select → **Update Selected** → change date → **Save Changes** | Form fills, button changes, new value listed | **PASS** — list showed the updated date |
-| 4 | Delete | Select → **Delete Selected** → **Yes** | Record disappears from the list | **PASS** — record removed |
-| 5 | Cancel delete | Select → **Delete Selected** → **No** | Record stays | **PASS** — nothing deleted |
-| 6 | No selection | **Update** or **Delete** with nothing highlighted | *"Please select a schedule"* warning | **PASS** — warning shown, no crash |
-| 7 | Enter key saves | Type in Title, press `Enter` | Saved without clicking | **PASS** — `returnPressed` → `save_schedule` |
-| 8 | Multiple sessions | Add records, close, reopen | All records still listed in order | **PASS** — loaded from SQLite on startup |
+| 1 | Add a schedule | Fill all fields → **Add Schedule** | Record appears in the list and persists | **PASS**: shown in list; present after restart |
+| 2 | Empty title | **Add Schedule** with blank Title | *"Missing title"* warning, nothing saved | **PASS**: warning shown, database unchanged |
+| 3 | Update | Select → **Update Selected** → change date → **Save Changes** | Form fills, button changes, new value listed | **PASS**: list showed the updated date |
+| 4 | Delete | Select → **Delete Selected** → **Yes** | Record disappears from the list | **PASS**: record removed |
+| 5 | Cancel delete | Select → **Delete Selected** → **No** | Record stays | **PASS**: nothing deleted |
+| 6 | No selection | **Update** or **Delete** with nothing highlighted | *"Please select a schedule"* warning | **PASS**: warning shown, no crash |
+| 7 | Enter key saves | Type in Title, press `Enter` | Saved without clicking | **PASS**: `returnPressed` → `save_schedule` |
+| 8 | Multiple sessions | Add records, close, reopen | All records still listed in order | **PASS**: loaded from SQLite on startup |
 
-### C. Automated — calendar feature
+### C. Automated: calendar feature
 
 Tested headless against an isolated database file, exercising `parse_date`, `colors`, and
 `CalendarView` directly.
 
 | # | Feature | Steps | Expected | Actual |
 |---|---------|-------|----------|--------|
-| 9 | **Date parsing** | `parse_date("04/20/2027")`, `" 8/4/2027 "`, `"2027-08-04"` | Correct `date` objects | **PASS** — all three parsed (single-digit months/days work) |
-| 10 | **Bad dates skipped** | `parse_date("99/99/2027")`, `"banana"`, `""` | `None`, never a crash | **PASS** — all returned `None` |
-| 11 | **Color by type** | `color_pair("quiz")`, `"EXAM"`, `"homework"`, `"banana"` | Correct color per type | **PASS** — quiz orange, exam red, `homework`→assignment blue, unknown grey |
-| 12 | **Grouping by day** | Add 5 schedules, 1 with an invalid date | 3 valid day-groups; invalid skipped | **PASS** — `2027-05-20` (2), `2027-06-01` (1), `2027-07-04` (1) |
-| 13 | **Day detail sorted** | Select `05/20/2027` (09:00 exam, 13:00 assignment) | Table shows 2 rows, earliest time first | **PASS** — 09:00 Exam, then 13:00 Assignment |
-| 14 | **Empty day** | Select `05/21/2027` | Label shows 0, table empty | **PASS** — 0 rows, no error |
-| 15 | **Mixed types** | Day with 2 schedules | Date turns grey, tooltip lists both types | **PASS** — grey `#e5e7eb`, tooltip `"2 schedule(s): Exam, Assignment"` |
-| 16 | **Cross-tab refresh** | Add via the Schedules tab, switch to Calendar | New record visible | **PASS** — appeared without restarting |
-| 17 | **Cross-tab update** | Rename via the Schedules tab, switch to Calendar | New title shown | **PASS** — `Physics Quiz (moved)` |
-| 18 | **Cross-tab delete** | Delete via the Schedules tab, switch to Calendar | Day no longer listed | **PASS** — group emptied, no stale color |
+| 9 | **Date parsing** | `parse_date("04/20/2027")`, `" 8/4/2027 "`, `"2027-08-04"` | Correct `date` objects | **PASS**: all three parsed (single-digit months/days work) |
+| 10 | **Bad dates skipped** | `parse_date("99/99/2027")`, `"banana"`, `""` | `None`, never a crash | **PASS**: all returned `None` |
+| 11 | **Color by type** | `color_pair("quiz")`, `"EXAM"`, `"homework"`, `"banana"` | Correct color per type | **PASS**: quiz orange, exam red, `homework`→assignment blue, unknown grey |
+| 12 | **Grouping by day** | Add 5 schedules, 1 with an invalid date | 3 valid day-groups; invalid skipped | **PASS**: `2027-05-20` (2), `2027-06-01` (1), `2027-07-04` (1) |
+| 13 | **Day detail sorted** | Select `05/20/2027` (09:00 exam, 13:00 assignment) | Table shows 2 rows, earliest time first | **PASS**: 09:00 Exam, then 13:00 Assignment |
+| 14 | **Empty day** | Select `05/21/2027` | Label shows 0, table empty | **PASS**: 0 rows, no error |
+| 15 | **Mixed types** | Day with 2 schedules | Date turns grey, tooltip lists both types | **PASS**: grey `#e5e7eb`, tooltip `"2 schedule(s): Exam, Assignment"` |
+| 16 | **Cross-tab refresh** | Add via the Schedules tab, switch to Calendar | New record visible | **PASS**: appeared without restarting |
+| 17 | **Cross-tab update** | Rename via the Schedules tab, switch to Calendar | New title shown | **PASS**: `Physics Quiz (moved)` |
+| 18 | **Cross-tab delete** | Delete via the Schedules tab, switch to Calendar | Day no longer listed | **PASS**: group emptied, no stale color |
 
 ### D. Delivered build
 
@@ -754,8 +754,8 @@ Tested headless against an isolated database file, exercising `parse_date`, `col
 
 ### Not yet implemented
 
-1. **No search in the GUI.** No search box — all records load and the user reads the list.
-   A `search(keyword)` method using `LIKE` is the plan (verified to work — see
+1. **No search in the GUI.** There is no search box, so all records load and the user reads the list.
+   A `search(keyword)` method using `LIKE` is the plan (verified to work, see
    [Search](#search)).
 2. **No sorting or filtering.** Records always show in ID order. Sorting by date also needs
    dates stored as `ISO 8601` (`YYYY-MM-DD`) so alphabetical order equals chronological order.
@@ -771,7 +771,7 @@ Tested headless against an isolated database file, exercising `parse_date`, `col
 ### Known weaknesses
 
 8. **No validation on date, time, or type.** Only the title is checked. `32/45/2027` and
-   `99:99` are accepted and stored as text — a bad date silently disappears from the calendar
+   `99:99` are accepted and stored as text, so a bad date silently disappears from the calendar
    because `parse_date()` returns `None` for it. Needs validation or a date-picker.
 9. **`type` is still free text.** The calendar copes by normalizing case and mapping aliases
    (`homework` → assignment), and unknown types fall back to grey. But `exam`, `Exam`, and
@@ -785,7 +785,7 @@ Tested headless against an isolated database file, exercising `parse_date`, `col
 12. **Duplicated services.** `service.py` has two identical classes. Only `StudentService` is
     used by `main.py`; `ScheduleService` should go.
 13. **Dead code in `features/schedule/view.py`.** Typos like `refrest()` and
-    `sertHorizontalHeaderLabels` would raise `AttributeError`. Not imported — should be deleted.
+    `sertHorizontalHeaderLabels` would raise `AttributeError`. It is not imported, so it should be deleted.
 14. **`controller/schedule.py` is disconnected.** Its menu loop is commented out in
     `main.py`, and the `Bridge` signals it needs are unused. Reference only.
 15. **New connection per operation.** `Database.connect()` runs inside each repository method
@@ -813,23 +813,23 @@ Tested headless against an isolated database file, exercising `parse_date`, `col
 | **Architecture** | Layered (Model → Repository → Service → View) |
 | **Repository** | https://github.com/NotLevi-Fr/Schedule-Management-System |
 | **Contact** | levigersonaquino@gmail.com |
-| **License** | Open source — free to use, copy, modify, share. See [Contributing](#contributing). |
+| **License** | Open source. Free to use, copy, modify, share. See [Contributing](#contributing). |
 
 ---
 
 ## Contributing
 
-Open source — contributions welcome.
+Open source, and contributions are welcome.
 
-- **Use it** — if it's useful to you, that's reason enough.
-- **Report bugs** — open an issue with what happened and what you expected.
-- **Suggest features** — especially anything that improves personal scheduling.
-- **Improve the code** — fork and open a pull request.
-- **Learn from it** — a reference for a small layered PyQt6 app.
+- **Use it**. If it's useful to you, that's reason enough.
+- **Report bugs**. Open an issue with what happened and what you expected.
+- **Suggest features**. Especially anything that improves personal scheduling.
+- **Improve the code**. Fork and open a pull request.
+- **Learn from it**. A reference for a small layered PyQt6 app.
 
 Changes that keep it small, offline, and dependency-free are preferred over ones that add
 complexity.
 
 ---
 
-*Documentation for the Schedule Management System — CS26.*
+*Documentation for the Schedule Management System (CS26).*
