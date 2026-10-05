@@ -69,27 +69,37 @@ persisted in a database.
    - **Repository** – performs all SQL / database operations
    - **Service** – business logic between the GUI and the database
    - **View** – the graphical user interface
+   - **Calendar** – the upcoming feature package for the calendar and color coding
 5. Use parameterized SQL queries so the program is not vulnerable to SQL injection.
 6. Keep the user interface simple enough for a non-programmer to use without training.
 7. Provide clear user feedback through confirmation dialogs and warning messages.
+8. Provide a **calendar view with color-coded schedules**, so deadlines can be seen at a
+   glance and schedule types can be told apart instantly.
 
 ---
 
 ## Features
 
+### Current Features (what works now)
+
 | # | Feature | Description |
 |---|---------|-------------|
-| 1 | **Add Schedule** | Fills the form with a title, date, time, type, and description, then presses **Add Schedule** to store a new record. |
-| 2 | **View All Schedules** | All saved schedules appear in a list at the bottom of the window as `Title \| Date \| Time \| Type \| Description`. |
-| 3 | **Update Schedule** | Select a schedule and press **Update Selected**. The form fills with that record and the button changes to **Save Changes**, allowing the entry to be corrected. |
-| 4 | **Delete Schedule** | Select a schedule and press **Delete Selected**. A confirmation dialog appears first so a record is never deleted by accident. |
-| 5 | **Input Validation** | The title field is mandatory. Leaving it empty shows a *"Please enter a title"* warning and stops the operation. |
-| 6 | **Automatic Whitespace Cleaning** | Leading and trailing spaces are removed from the title, date, type, and description before saving. |
-| 7 | **Selection Guard** | Pressing **Update** or **Delete** with nothing selected shows a *"Please select a schedule"* warning instead of failing silently. |
-| 8 | **Missing-Record Guard** | If the selected record no longer exists in the database, the app warns *"That schedule no longer exists"* and resets the form safely. |
-| 9 | **Keyboard Shortcut** | Pressing **Enter** in the Title field saves the schedule, so the whole form can be filled with the keyboard only. |
-| 10 | **Automatic Table Creation** | The `schedule` table is created automatically on first run — no manual SQL or setup step is required. |
-| 11 | **Persistent Storage** | Data is stored in `data/schedule.db` and survives closing and reopening the application. |
+| 1 | **Add Schedule** | Fill in the title, date, time, type, and description, then press **Add Schedule** to store a new record in the database. |
+| 2 | **View Schedules** | All saved schedules are listed in the window as `Title \| Date \| Time \| Type \| Description`. |
+| 3 | **Update Schedule** | Select a schedule and press **Update Selected** to load it into the form, edit it, and save the changes. |
+| 4 | **Delete Schedule** | Select a schedule and press **Delete Selected**. A confirmation dialog appears first to prevent accidental deletion. |
+| 5 | **Save Data** | Every schedule is stored in the SQLite database and remains there after the application is closed. |
+
+### Next Feature (planned) — Calendar View with Color Coding
+
+| # | Feature | Description |
+|---|---------|-------------|
+| 6 | **Calendar View** | Display the saved schedules inside a monthly calendar so the user can see their deadlines at a glance instead of reading a plain list. |
+| 7 | **Color-Coded Entries** | Each schedule type (Exam, Activity, Assignment, etc.) is given its own color, so exams, quizzes, and activities can be identified instantly on the calendar. |
+
+> The calendar will be built inside the existing `features/calendar/` package, which is
+> already created and waiting. It will reuse the current `Schedule` model and database
+> layer, so no saved data will be lost.
 
 ---
 
@@ -132,7 +142,7 @@ ScheduleManagementSystem/
 ├── features/                    # FEATURE MODULES
 │   ├── __init__.py
 │   ├── calendar/
-│   │   └── __init__.py          # Placeholder for a future calendar/date-picker feature
+│   │   └── __init__.py          # Upcoming feature: calendar view with color-coded schedules
 │   └── schedule/                # Schedule feature (complete feature module)
 │       ├── __init__.py
 │       ├── model.py             # Schedule dataclass — the data of ONE schedule
@@ -158,7 +168,7 @@ ScheduleManagementSystem/
 | `features/schedule/service.py` | Business logic layer. `ScheduleService` and `StudentService` pass requests from the GUI down to the repository. |
 | `features/schedule/view.py` | An early, unfinished GUI attempt containing typos (`refrest()`, `sertHorizontalHeaderLabels`). **Not imported by `main.py`** — kept only as history. |
 | `view/student_view.py` | The real application window (`StudentView`). Builds the form, buttons, and list, and handles add/update/delete/refresh. |
-| `features/calendar/` | Empty placeholder package for a planned calendar/date-picker feature. |
+| `features/calendar/` | Empty package reserved for the upcoming calendar view and color coding feature. |
 
 ---
 
@@ -260,6 +270,9 @@ sqlite3 data/schedule.db ".tables"
      **No** to cancel.
 
 6. **Quit** — close the window. All data is already saved in `data/schedule.db`.
+
+> **Coming next:** a calendar view where all of these schedules appear on a monthly calendar,
+> with each schedule type shown in its own color.
 
 ### Tips
 
@@ -693,43 +706,49 @@ The following items are **not yet implemented** or are known weaknesses of the c
 3. **No user authentication or login.** Everyone who opens the program has full access to
    all data. There are no usernames, passwords, or roles. *(Planned)*
 4. **No dark mode toggle.** Only the default light theme is available. *(Planned)*
-5. **No calendar or date-picker widget.** The `features/calendar/` folder is an empty
-   placeholder. Dates must be typed manually as text.
-6. **No export or print.** Schedules cannot be exported to PDF, CSV, or `.ics`, and the
+5. **No color coding.** Schedule types are plain text with no visual distinction. This will
+   be resolved together with the calendar view.
+6. **No calendar view yet.** This is the next planned feature — see
+   [Next Feature](#next-feature-planned--calendar-view-with-color-coding). Schedules are
+   currently shown only as a plain list, and dates must be typed manually as text with no
+   date-picker to guide the input.
+7. **No export or print.** Schedules cannot be exported to PDF, CSV, or `.ics`, and the
    list cannot be printed.
-7. **No recurring schedules.** A weekly class meeting must be re-entered for every
+8. **No recurring schedules.** A weekly class meeting must be re-entered for every
    occurrence. There is no repeat/recurrence field.
-8. **No automatic test suite in the repository.** The tests in this README were run as
+9. **No automatic test suite in the repository.** The tests in this README were run as
    one-off scripts; `pytest` tests are not committed, and there is no CI pipeline.
 
 ### Known weaknesses
 
-9. **No input validation on date, time, or type.** Only the title is checked. Entering
-   `32/45/2027` or `99:99` is accepted and stored as text. Validation (or a date-picker
-   widget) is needed.
-10. **`type` is free text.** A typo like `exam`, `Exam`, and `EXAM` creates three different
-    types. A dropdown (`QComboBox`) with fixed values would enforce consistency.
-11. **Inconsistent naming — leftover from the original CLI version.** The classes are still
+10. **No input validation on date, time, or type.** Only the title is checked. Entering
+    `32/45/2027` or `99:99` is accepted and stored as text. Validation (or a date-picker
+    widget) is needed.
+11. **`type` is free text.** A typo like `exam`, `Exam`, and `EXAM` creates three different
+    types. A dropdown (`QComboBox`) with fixed values would enforce consistency. This
+    should be solved before color coding is added, since the colors will be mapped to
+    schedule types.
+12. **Inconsistent naming — leftover from the original CLI version.** The classes are still
     called `StudentView` and `StudentService` even though they manage *schedules*, not
     students. They should be renamed to `ScheduleView` and `ScheduleService`.
-12. **Duplicated service classes.** `service.py` contains two classes with identical
+13. **Duplicated service classes.** `service.py` contains two classes with identical
     behavior — `ScheduleService` and `StudentService`. Only `StudentService` is used by
     `main.py`; `ScheduleService` should be removed.
-13. **Dead / broken code in `features/schedule/view.py`.** This earlier GUI attempt
+14. **Dead / broken code in `features/schedule/view.py`.** This earlier GUI attempt
     contains typos such as `refrest()` and `sertHorizontalHeaderLabels` and would raise
     `AttributeError` if run. It is not imported by `main.py` and should be deleted.
-14. **`controller/schedule.py` is disconnected.** The command-line menu loop is commented
+15. **`controller/schedule.py` is disconnected.** The command-line menu loop is commented
     out in `main.py`, and the `Bridge` QObject signals (`refreshed`, `quit_requested`) it
     depends on are unused. This file is reference material only.
-15. **Every operation opens a new database connection.** `Database.connect()` is called
+16. **Every operation opens a new database connection.** `Database.connect()` is called
     inside each repository method rather than reusing one connection. This is correct and
     safe for a small application, but a connection pool would be better at scale.
-16. **No error handling for a locked or corrupted database file.** If `schedule.db` is
+17. **No error handling for a locked or corrupted database file.** If `schedule.db` is
     opened by another program or becomes corrupted, the application raises an unhandled
     `sqlite3.OperationalError`. A `try/except` with a user-friendly message is needed.
-17. **The window cannot be resized gracefully.** The layout is fixed at 420 × 480 px and
+18. **The window cannot be resized gracefully.** The layout is fixed at 420 × 480 px and
     long titles are clipped in the list; there is no horizontal scrollbar.
-18. **`requirements.txt` contains only the direct dependency.** It should also pin or
+19. **`requirements.txt` contains only the direct dependency.** It should also pin or
     document the minimum Python version for reproducibility.
 
 ---
