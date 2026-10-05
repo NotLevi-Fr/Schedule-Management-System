@@ -5,21 +5,67 @@
 
 ---
 
+## About This Project
+
+**Schedule and calendar applications already exist — many of them, and some of them are
+free.** This project is not an attempt to replace them or to claim that scheduling software
+is a new idea. It exists for three reasons:
+
+**1. Built for personal use.**
+This was made for myself, to solve my own scheduling problem in the way I wanted it solved.
+There was no client, no requirement document, and no feature list from anyone else. The
+decisions reflect one user's real needs — keeping it small, fast, and free of accounts,
+subscriptions, ads, and internet requirements. It runs entirely offline.
+
+**2. Built to be modified.**
+The reason for the layered structure (Model → Repository → Service → View) is
+*modifiability*. Every part is separated so it can be changed independently:
+
+- Swap SQLite for PostgreSQL or MySQL by editing only `data/data.py` and
+  `features/schedule/repository.py`.
+- Replace the PyQt6 window with a web or mobile interface by rewriting only the view layer —
+  the model, service, and database code stay untouched.
+- Change how a schedule looks or what fields it has by editing only
+  `features/schedule/model.py`.
+- Add the calendar view and color coding without disturbing the existing add/view/update/
+  delete features.
+
+The goal is code that is **easy to read, easy to change, and easy to learn from** — not a
+finished, locked-down product.
+
+**3. Open source.**
+The code is public so that anyone can read it, copy it, learn from it, improve it, or use
+it as a starting point for their own scheduler. Contributions, bug reports, and forks are
+welcome. If this project saves you time, or helps you understand how a small layered Python
+desktop application is put together, that is a good enough reason for it to exist.
+
+> **Note on licensing:** this repository does not currently include a `LICENSE` file, so
+> there is no formal license attached to the code yet. Until one is added, the safest
+> interpretation is that the code is publicly readable but **not** formally licensed for
+> reuse. If you intend to reuse or redistribute it, add a license — the
+> [MIT License](https://opensource.org/license/mit) is the usual choice for a project like
+> this, because it permits modification and reuse with only the requirement that the
+> original credit is kept.
+
+---
+
 ## Table of Contents
 
-1. [Project Description](#project-description)
-2. [Project Objectives](#project-objectives)
-3. [Features](#features)
-4. [Technologies Used](#technologies-used)
-5. [Project Structure](#project-structure)
-6. [Installation and Setup](#installation-and-setup)
-7. [How to Use the System](#how-to-use-the-system)
-8. [OOP Implementation](#oop-implementation)
-9. [Database](#database)
-10. [Screenshots](#screenshots)
-11. [Testing](#testing)
-12. [Known Issues / Limitations](#known-issues--limitations)
-13. [Author](#author)
+1. [About This Project](#about-this-project)
+2. [Project Description](#project-description)
+3. [Project Objectives](#project-objectives)
+4. [Features](#features)
+5. [Technologies Used](#technologies-used)
+6. [Project Structure](#project-structure)
+7. [Installation and Setup](#installation-and-setup)
+8. [How to Use the System](#how-to-use-the-system)
+9. [OOP Implementation](#oop-implementation)
+10. [Database](#database)
+11. [Screenshots](#screenshots)
+12. [Testing](#testing)
+13. [Known Issues / Limitations](#known-issues--limitations)
+14. [Author](#author)
+15. [Contributing](#contributing)
 
 ---
 
@@ -465,6 +511,12 @@ CREATE TABLE IF NOT EXISTS schedule (
 | `type` | TEXT | — | Category of the schedule (Exam, Activity, Assignment, Quiz, etc.). |
 | `desc` | TEXT | — | Optional extra details. |
 
+> **Why SQLite?** It needs no installation, no server, and no configuration — the entire
+> database is one file (`data/schedule.db`). For a personal, offline, single-user tool this
+> is the simplest option that still qualifies as a real relational database. Because all
+> SQL is confined to the repository layer, moving to PostgreSQL or MySQL later is a change
+> to one file rather than a rewrite.
+
 > SQLite also creates an internal `sqlite_sequence` table by itself to support
 > `AUTOINCREMENT`. It is a built-in system table and is not used by the application.
 
@@ -766,6 +818,22 @@ The following items are **not yet implemented** or are known weaknesses of the c
 | **Architecture** | Layered (Model → Repository → Service → View) |
 | **Repository** | https://github.com/NotLevi-Fr/Schedule-Management-System |
 | **Contact** | levigersonaquino@gmail.com |
+| **License** | Open source — free to use, copy, modify, and share. See [Contributing](#contributing). |
+
+---
+
+## Contributing
+
+This is an open source project, and contributions are welcome.
+
+- **Use it** — if it is useful to you, that is a perfectly good reason.
+- **Report bugs** — open an issue describing what happened and what you expected.
+- **Suggest features** — especially anything that improves personal scheduling.
+- **Improve the code** — fork the repository and open a pull request.
+- **Learn from it** — use it as a reference for a small layered PyQt6 application.
+
+Because the project is built for personal use, changes that keep it small, offline, and
+free of external dependencies are preferred over features that add complexity.
 
 ---
 
