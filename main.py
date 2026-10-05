@@ -1,10 +1,11 @@
 import sys
 # import threading
 from PyQt6.QtCore import QObject, pyqtSignal
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QTabWidget
 
 # import controller.schedule as schedule
 from data.data import Database
+from features.calendar import CalendarView
 from features.schedule.service import StudentService
 from view import StudentView
 
@@ -20,11 +21,19 @@ def main():
 
     app = QApplication(sys.argv)
     service = StudentService(database)
-    window = StudentView(service)
-    window.show(1)
+
+    schedule_view = StudentView(service)
+    calendar_view = CalendarView(service)
+
+    window = QTabWidget()
+    window.addTab(schedule_view, "Schedules")
+    window.addTab(calendar_view, "Calendar")
+    window.resize(560, 620)
+    window.setWindowTitle("Schedule Management System")
+    window.show()
 
     bridge = Bridge()
-    bridge.refreshed.connect(window.refresh)
+    bridge.refreshed.connect(schedule_view.refresh)
     bridge.quit_requested.connect(app.quit)
 
     # def cli_loop():
