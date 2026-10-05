@@ -609,12 +609,13 @@ Tracked under [Known Issues / Limitations](#known-issues--limitations).
 
 ## Screenshots
 
-> ⚠️ **Action required:** every `[INSERT IMAGE: ...]` placeholder below must be replaced
-> with a real screenshot before submission. Run `python main.py` and capture the window.
+> All screenshots below were captured from the running application using
+> sample data, so the real `data/schedule.db` was not modified. The image files live
+> in the [`screenshots/`](screenshots/) folder and are referenced with relative paths.
 
 ### Screenshot 1: Startup
 
-`[INSERT IMAGE: the empty window on startup. Title, Date, Time, Type, Description fields; "Add Schedule", "Update Selected", "Delete Selected" buttons; empty Schedules list below.]`
+![Screenshot 1](screenshots/01-startup.png)
 
 *The window right after running `python main.py`. The table is created automatically and the
 list is empty because nothing has been added yet.*
@@ -623,7 +624,7 @@ list is empty because nothing has been added yet.*
 
 ### Screenshot 2: Adding a schedule
 
-`[INSERT IMAGE: the form filled with a sample entry (Title: "Calculus Final", Date: 05/20/2027, Time: 09:00, Type: Exam, Description: Room 301) just before clicking "Add Schedule".]`
+![Screenshot 2](screenshots/02-adding-schedule.png)
 
 *The input form. Only the title is required; the rest shows a typical exam entry.*
 
@@ -631,7 +632,7 @@ list is empty because nothing has been added yet.*
 
 ### Screenshot 3: List populated
 
-`[INSERT IMAGE: the window after adding two or three schedules, showing the Schedules list displaying entries as "Title | Date | Time | Type | Description".]`
+![Screenshot 3](screenshots/03-schedule-list.png)
 
 *Saved records appear in the list, proving the data was written to and read back from SQLite.*
 
@@ -639,7 +640,7 @@ list is empty because nothing has been added yet.*
 
 ### Screenshot 4: Update mode
 
-`[INSERT IMAGE: a schedule selected in the list, its values loaded into the form, and the left button changed from "Add Schedule" to "Save Changes".]`
+![Screenshot 4](screenshots/04-update-mode.png)
 
 *Update in progress. The form is filled and the button text makes it clear the app will edit
 the selected record, not create a new one.*
@@ -648,7 +649,7 @@ the selected record, not create a new one.*
 
 ### Screenshot 5: Delete confirmation
 
-`[INSERT IMAGE: the "Delete schedule" dialog asking "Delete [schedule name]?" with Yes and No, over the main window.]`
+![Screenshot 5](screenshots/05-delete-confirmation.png)
 
 *The safety confirmation before deleting. **No** cancels and leaves the record untouched.*
 
@@ -656,7 +657,7 @@ the selected record, not create a new one.*
 
 ### Screenshot 6: Validation warning
 
-`[INSERT IMAGE: a "Missing title" warning after clicking "Add Schedule" with an empty Title field.]`
+![Screenshot 6](screenshots/06-validation-warning.png)
 
 *Validation in action. An empty title is rejected and nothing is written to the database.*
 
@@ -664,7 +665,7 @@ the selected record, not create a new one.*
 
 ### Screenshot 7: Calendar view with color coding
 
-`[INSERT IMAGE: the "Calendar" tab showing a monthly calendar with schedule dates colored by type (for example a red exam date and a blue assignment date), a legend along the bottom, and the table below showing the selected day's schedules.]`
+![Screenshot 7](screenshots/07-calendar-color-coded.png)
 
 *The calendar tab. Each date is colored by its schedule type, grey means several types that day,
 and clicking a date lists its schedules sorted by time.*
@@ -673,7 +674,7 @@ and clicking a date lists its schedules sorted by time.*
 
 ### Screenshot 8: Day detail with legend
 
-`[INSERT IMAGE: a single date selected on the calendar, with the "Day, Month DD, YYYY: N schedule(s)" label and a table of Time / Type / Title / Description rows for that day, with the legend row visible.]`
+![Screenshot 8](screenshots/08-calendar-day-detail.png)
 
 *Selecting a date lists its schedules. Each row carries the same color as its calendar date, so
 the table and the calendar are read the same way.*
