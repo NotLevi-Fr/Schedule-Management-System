@@ -221,9 +221,9 @@ __marimo__/
 schedule.txt
 REPORT.md
 data/schedule.db
-ScheduleManagementSystem.pptx
-# Ignore an entire folder (always end with a slash)
 
+# Ignore an entire folder (always end with a slash)
+private/
 
 # Ignore all files ending with a specific extension
 
