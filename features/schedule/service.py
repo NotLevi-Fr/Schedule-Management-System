@@ -11,6 +11,18 @@ class ScheduleService:
     def add_schedule(self, schedule: Schedule) -> Schedule:
         return self.repository.add(schedule)
 
+    def update_schedule(self, schedule: Schedule) -> Schedule:
+        return self.repository.update(schedule)
+
+    def delete_schedule(self, schedule_id: int) -> None:
+        self.repository.delete(schedule_id)
+
+    def get_schedule(self, schedule_id: int) -> Schedule | None:
+        return self.repository.get(schedule_id)
+
+    def list_schedules(self) -> list[Schedule]:
+        return self.repository.list()
+
 
 class StudentService:
     def __init__(self, database: Database):
@@ -19,8 +31,14 @@ class StudentService:
     def add(self, schedule: Schedule) -> Schedule:
         return self.repository.add(schedule)
 
+    def update(self, schedule: Schedule) -> Schedule:
+        return self.repository.update(schedule)
+
     def delete(self, schedule_id: int) -> None:
         self.repository.delete(schedule_id)
+
+    def get(self, schedule_id: int) -> Schedule | None:
+        return self.repository.get(schedule_id)
 
     def list(self) -> list[Schedule]:
         return self.repository.list()
