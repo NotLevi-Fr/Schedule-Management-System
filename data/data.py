@@ -21,8 +21,20 @@ class Database:
                     title TEXT,
                     date TEXT,
                     time TEXT,
-                    type TEXT,
+                    category TEXT,
                     desc TEXT
                 )
                 """
+            )
+            connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS categories (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT UNIQUE NOT NULL
+                )
+                """
+            )
+            connection.execute(
+                "INSERT OR IGNORE INTO categories (name) VALUES (?), (?), (?), (?), (?), (?)",
+                ("Exam", "Quiz", "Assignment", "Activity", "Lecture", "Deadline"),
             )

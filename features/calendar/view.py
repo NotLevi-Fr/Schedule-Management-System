@@ -42,7 +42,7 @@ class CalendarView(QWidget):
         layout.addWidget(self.selected_label)
 
         self.table = QTableWidget(0, 4)
-        self.table.setHorizontalHeaderLabels(["Time", "Type", "Title", "Description"])
+        self.table.setHorizontalHeaderLabels(["Time", "Category", "Title", "Description"])
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
@@ -103,7 +103,7 @@ class CalendarView(QWidget):
             text_format.setBackground(QColor(background))
             text_format.setForeground(QColor(foreground))
 
-            names = ", ".join(dict.fromkeys(display_type(item.typ) for item in schedules))
+            names = ", ".join(dict.fromkeys(display_type(item.category) for item in schedules))
             text_format.setToolTip(f"{len(schedules)} schedule(s): {names}")
 
             self.calendar.setDateTextFormat(self.to_qdate(day), text_format)
@@ -117,7 +117,7 @@ class CalendarView(QWidget):
     def day_colors(self, schedules: list[Schedule]) -> tuple[str, str]:
         if len(schedules) > 1:
             return DEFAULT_COLOR
-        return color_pair(schedules[0].typ)
+        return color_pair(schedules[0].category)
 
     def show_selected_day(self) -> None:
         selected = self.calendar.selectedDate()
@@ -137,10 +137,10 @@ class CalendarView(QWidget):
         row = self.table.rowCount()
         self.table.insertRow(row)
 
-        background, foreground = color_pair(schedule.typ)
+        background, foreground = color_pair(schedule.category)
         values = (
             schedule.time,
-            display_type(schedule.typ),
+            display_type(schedule.category),
             schedule.title,
             schedule.desc,
         )

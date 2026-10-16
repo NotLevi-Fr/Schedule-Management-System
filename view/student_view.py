@@ -1,5 +1,6 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QComboBox,
     QFormLayout,
     QHBoxLayout,
     QLabel,
@@ -14,12 +15,15 @@ from PyQt6.QtWidgets import (
 
 from features.schedule.model import Schedule
 from features.schedule.service import StudentService
+from features.categories.service import CategoryService
 
 
 class StudentView(QWidget):
-    def __init__(self, service: StudentService):
+    def __init__(self, service: StudentService, category_service: CategoryService | None = None):
         super().__init__()
         self.service = service
+        self._database = getattr(getattr(service, "repository", None), "database", None)
+        self.category_service = category_service or CategoryService(self._database)
         self.editing_id: int | None = None
         self.setWindowTitle("Schedule Management System")
         self.resize(420, 480)
@@ -30,13 +34,14 @@ class StudentView(QWidget):
         self.title_input = QLineEdit()
         self.date_input = QLineEdit()
         self.time_input = QLineEdit()
-        self.type_input = QLineEdit()
+        self.category_combo = QComboBox()
+        self.category_combo.setEditable(True)
         self.desc_input = QLineEdit()
         self.title_input.returnPressed.connect(self.save_schedule)
         form.addRow("Title", self.title_input)
         form.addRow("Date (MM/DD/YYYY)", self.date_input)
         form.addRow("Time (HH:MM)", self.time_input)
-        form.addRow("Type", self.type_input)
+        form.addRow("Category", self.category_combo)
         form.addRow("Description (Optional)", self.desc_input)
         layout.addLayout(form)
 
@@ -62,6 +67,19 @@ class StudentView(QWidget):
         self.refresh()
         super().show()
 
+    def showEvent(self, event) -> None:
+        super().showEvent(event)
+        self.refresh()
+
+    def _refresh_category_combo(self) -> None:
+        current = self.category_combo.currentText()
+        self.category_combo.clear()
+        if self.category_service is not None:
+            for cat in self.category_service.list():
+                self.category_combo.addItem(cat.name)
+        if current:
+            self.category_combo.setCurrentText(current)
+
     def selected_id(self, action: str) -> int | None:
         item = self.list.currentItem()
         if item is None:
@@ -72,31 +90,33 @@ class StudentView(QWidget):
 
         return item.data(Qt.ItemDataRole.UserRole)
 
-    def fields(self) -> tuple[QLineEdit, ...]:
+    def fields(self) -> tuple:
         return (
             self.title_input,
             self.date_input,
             self.time_input,
-            self.type_input,
+            self.category_combo,
             self.desc_input,
         )
 
     def clear_form(self) -> None:
-        for field in self.fields():
-            field.clear()
+        self.title_input.clear()
+        self.date_input.clear()
+        self.time_input.clear()
+        self.desc_input.clear()
+        self.category_combo.setCurrentIndex(-1)
+        self.category_combo.setEditText("")
 
     def fill_form(self, schedule: Schedule) -> None:
-        for field, value in zip(
-            self.fields(),
-            (
-                schedule.title,
-                schedule.date,
-                schedule.time,
-                schedule.typ,
-                schedule.desc,
-            ),
-        ):
-            field.setText(value)
+        self.title_input.setText(schedule.title)
+        self.date_input.setText(schedule.date)
+        self.time_input.setText(schedule.time)
+        idx = self.category_combo.findText(schedule.category)
+        if idx >= 0:
+            self.category_combo.setCurrentIndex(idx)
+        else:
+            self.category_combo.setCurrentText(schedule.category)
+        self.desc_input.setText(schedule.desc)
 
     def read_form(self) -> Schedule | None:
         title = self.title_input.text().strip()
@@ -176,10 +196,11 @@ class StudentView(QWidget):
             self.refresh()
 
     def refresh(self) -> None:
+        self._refresh_category_combo()
         self.list.clear()
         for schedule in self.service.list():
             item = QListWidgetItem(
-                f"{schedule.title} | {schedule.date} | {schedule.time} | {schedule.typ} | {schedule.desc}"
+                f"{schedule.title} | {schedule.date} | {schedule.time} | {schedule.category} | {schedule.desc}"
             )
             item.setData(Qt.ItemDataRole.UserRole, schedule.id)
             self.list.addItem(item)

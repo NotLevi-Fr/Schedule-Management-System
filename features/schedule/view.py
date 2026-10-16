@@ -31,12 +31,12 @@ class ScheduleView(QWidget):
         self.title_input = QLineEdit()
         self.date_input = QLineEdit()
         self.time_input = QLineEdit()
-        self.type_input = QLineEdit()
+        self.category_input = QLineEdit()
         self.description_input = QLineEdit()
         form.addRow("Title", self.title_input)
         form.addRow("Date", self.date_input)
         form.addRow("Time", self.time_input)
-        form.addRow("Type", self.type_input)
+        form.addRow("Category", self.category_input)
         form.addRow("Description", self.description_input)
         layout.addLayout(form)
 
@@ -46,7 +46,7 @@ class ScheduleView(QWidget):
 
         self.table = QTableWidget(0, 5)
         self.table.sertHorizontalHeaderLabels(
-            ["Title", "Date", "Time", "Type", "Description"]
+            ["Title", "Date", "Time", "Category", "Description"]
         )
         self.table.horizontalHeaders().setsectionResizeMode(
             QHeaderView.ResizeMode.Stretch
@@ -58,7 +58,7 @@ class ScheduleView(QWidget):
                 self.title_input.text(),
                 self.date_input.text(),
                 self.time_input.text(),
-                self.type_input.text(),
+                self.category_input.text(),
                 self.description_input.text(),
             )
             self.service.add_schedule(schedule)
@@ -70,7 +70,7 @@ class ScheduleView(QWidget):
         self.title_input.clear()
         self.date_input.clear()
         self.time_input.clear()
-        self.type_input.clear()
+        self.category_input.clear()
         self.description_input.clear()
         self.refrest()
 

@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QApplication, QTabWidget
 # import controller.schedule as schedule
 from data.data import Database
 from features.calendar import CalendarView
+from features.categories import CategoryService, CategoryView
 from features.schedule.service import StudentService
 from view import StudentView
 
@@ -22,18 +23,22 @@ def main():
     app = QApplication(sys.argv)
     service = StudentService(database)
 
-    schedule_view = StudentView(service)
+    category_service = CategoryService(database)
+    schedule_view = StudentView(service, category_service)
     calendar_view = CalendarView(service)
+    category_view = CategoryView(category_service)
 
     window = QTabWidget()
     window.addTab(schedule_view, "Schedules")
     window.addTab(calendar_view, "Calendar")
+    window.addTab(category_view, "Categories")
     window.resize(560, 620)
     window.setWindowTitle("Schedule Management System")
     window.show()
 
     bridge = Bridge()
     bridge.refreshed.connect(schedule_view.refresh)
+    bridge.refreshed.connect(category_view.refresh)
     bridge.quit_requested.connect(app.quit)
 
     # def cli_loop():

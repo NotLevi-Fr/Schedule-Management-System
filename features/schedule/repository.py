@@ -11,14 +11,14 @@ class ScheduleRepository:
         with self.database.connect() as connection:
             cursor = connection.execute(
                 """
-                INSERT INTO schedule (title, date, time, type, desc)
+                INSERT INTO schedule (title, date, time, category, desc)
                 VALUES (?, ?, ?, ?, ?)
                 """,
                 (
                     schedule.title,
                     schedule.date,
                     schedule.time,
-                    schedule.typ,
+                    schedule.category,
                     schedule.desc,
                 ),
             )
@@ -31,14 +31,14 @@ class ScheduleRepository:
             connection.execute(
                 """
                 UPDATE schedule
-                SET title = ?, date = ?, time = ?, type = ?, desc = ?
+                SET title = ?, date = ?, time = ?, category = ?, desc = ?
                 WHERE id = ?
                 """,
                 (
                     schedule.title,
                     schedule.date,
                     schedule.time,
-                    schedule.typ,
+                    schedule.category,
                     schedule.desc,
                     schedule.id,
                 ),
@@ -53,7 +53,7 @@ class ScheduleRepository:
     def get(self, schedule_id: int) -> Schedule | None:
         with self.database.connect() as connection:
             row = connection.execute(
-                "SELECT id, title, date, time, type, desc FROM schedule WHERE id = ?",
+                "SELECT id, title, date, time, category, desc FROM schedule WHERE id = ?",
                 (schedule_id,),
             ).fetchone()
 
@@ -72,7 +72,7 @@ class ScheduleRepository:
     def list(self) -> list[Schedule]:
         with self.database.connect() as connection:
             rows = connection.execute(
-                "SELECT id, title, date, time, type, desc FROM schedule"
+                "SELECT id, title, date, time, category, desc FROM schedule"
             ).fetchall()
 
         return [
