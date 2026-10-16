@@ -300,12 +300,17 @@ sqlite3 data/schedule.db ".tables"
 
 6. **See the calendar.** Click the **Calendar** tab.
    - Each date with a schedule is **color-coded by category** (see the legend at the bottom).
-   - Dates with more than one schedule are **grey**, and hovering shows how many and which types.
+   - Dates with more than one schedule are **grey**, and hovering shows how many and which categories.
    - Click any date to list that day's schedules below, sorted by time.
    - Use the arrows to move between months.
    - Changes made on the **Schedules** tab appear here automatically when you switch to this tab.
 
-7. **Quit.** Close the window. Data is already saved.
+7. **Manage categories.** Click the **Categories** tab.
+   - Type a name (e.g., `Final Exam`) and click **Add Category**.
+   - Select one and click **Update Selected** to rename it, or **Delete Selected** to remove it.
+   - Categories you add appear in the **Category** dropdown on the Schedules tab.
+
+8. **Quit.** Close the window. Data is already saved.
 
 ### Tips
 
