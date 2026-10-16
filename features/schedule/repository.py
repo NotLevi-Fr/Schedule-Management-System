@@ -65,7 +65,7 @@ class ScheduleRepository:
             title=row[1],
             date=row[2],
             time=row[3],
-            typ=row[4],
+            category=row[4],
             desc=row[5],
         )
 
@@ -81,7 +81,7 @@ class ScheduleRepository:
                 title=row[1],
                 date=row[2],
                 time=row[3],
-                typ=row[4],
+                category=row[4],
                 desc=row[5],
             )
             for row in rows

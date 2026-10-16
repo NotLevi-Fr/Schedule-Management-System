@@ -128,7 +128,7 @@ class StudentView(QWidget):
             title,
             self.date_input.text(),
             self.time_input.text(),
-            self.type_input.text(),
+            self.category_combo.currentText(),
             self.desc_input.text(),
             id=self.editing_id,
         )

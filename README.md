@@ -62,7 +62,7 @@ issues, and pull requests are welcome.
 ### What it does
 
 A desktop GUI app that keeps every important date in one place, instead of on paper or in
-memory. Each entry stores a **title, date, time, type, and description**, saved to a local
+memory. Each entry stores a **title, date, time, category, and description**, saved to a local
 SQLite file so nothing is lost when the program closes.
 
 It started as a command-line project (`controller/schedule.py`), then became a PyQt6 window
@@ -109,15 +109,16 @@ deleted, and reviewed at a glance.
 
 | # | Feature | Description |
 |---|---------|-------------|
-| 1 | **Add Schedule** | Fill in title, date, time, type, and description, then press **Add Schedule** to save a record. |
-| 2 | **View Schedules** | Saved schedules list in the window as `Title \| Date \| Time \| Type \| Description`. |
+| 1 | **Add Schedule** | Fill in title, date, time, category, and description, then press **Add Schedule** to save a record. |
+| 2 | **View Schedules** | Saved schedules list in the window as `Title \| Date \| Time \| Category \| Description`. |
 | 3 | **Update Schedule** | Select a schedule → **Update Selected** → it loads into the form → edit → save. |
 | 4 | **Delete Schedule** | Select a schedule → **Delete Selected**. A confirmation dialog prevents accidents. |
 | 5 | **Save Data** | Everything is stored in SQLite and survives closing the app. |
 | 6 | **Calendar View** | Schedules appear as color-coded dates on a monthly calendar. Click a date to list that day's schedules in a table, sorted by time. |
-| 7 | **Color Coding** | Each schedule type gets its own color, so exams, quizzes, and activities are distinguishable at a glance. Days with mixed types turn grey. |
+| 7 | **Color Coding** | Each category gets its own color, so exams, quizzes, and activities are distinguishable at a glance. Days with mixed categories turn grey. |
+| 8 | **Category Management** | Add, view, update, and delete custom categories (e.g., Final Exam, Lab, Presentation) from the **Categories** tab. The Schedules form then offers them in a dropdown. |
 
-The app has two tabs: **Schedules** (features 1 to 5) and **Calendar** (features 6 to 7).
+The app has three tabs: **Schedules** (features 1 to 5), **Calendar** (features 6 to 7), and **Categories** (feature 8).
 
 ### Still planned
 
@@ -168,9 +169,15 @@ ScheduleManagementSystem/
 │   ├── __init__.py
 │   ├── calendar/                # Calendar feature (implemented)
 │   │   ├── __init__.py          # Exports CalendarView, parse_date
-│   │   ├── colors.py            # Schedule type → color mapping, aliases, legend data
+│   │   ├── colors.py            # Schedule category → color mapping, aliases, legend data
 │   │   ├── dates.py             # parse_date(): turns stored text into a real date
 │   │   └── view.py              # CalendarView: the calendar window with color coding
+│   ├── categories/              # Category management feature
+│   │   ├── __init__.py
+│   │   ├── model.py             # Category dataclass
+│   │   ├── repository.py        # CRUD for the categories table
+│   │   ├── service.py           # Business logic
+│   │   └── view.py              # CategoryView: the Categories tab
 │   └── schedule/                # Schedule feature
 │       ├── __init__.py
 │       ├── model.py             # Schedule dataclass: data of ONE schedule
@@ -187,17 +194,18 @@ ScheduleManagementSystem/
 
 | File / Folder | Purpose |
 |---------------|---------|
-| `main.py` | Entry point. Builds the `Database`, `StudentService`, and `StudentView`, then starts the Qt loop. |
+| `main.py` | Entry point. Builds the `Database`, services, and views, then starts the Qt loop. |
 | `controller/schedule.py` | The original command-line version. Reference only, since its loop is commented out in `main.py`. |
 | `data/data.py` | `Database` class. Holds the DB path, opens connections, creates the table. |
 | `data/schedule.db` | The SQLite file storing all schedules. Auto-created. Never edit by hand. |
-| `features/schedule/model.py` | `Schedule` dataclass (`title`, `date`, `time`, `typ`, `desc`, `id`). Strips whitespace in `__post_init__`. |
+| `features/schedule/model.py` | `Schedule` dataclass (`title`, `date`, `time`, `category`, `desc`, `id`). Strips whitespace in `__post_init__`. |
 | `features/schedule/repository.py` | `ScheduleRepository`. Holds **all** SQL with parameterized queries. Converts rows into `Schedule` objects. |
 | `features/schedule/service.py` | Business logic. `ScheduleService` and `StudentService` pass GUI requests to the repository. |
 | `features/schedule/view.py` | Unfinished early GUI attempt with typos (`refrest()`, `sertHorizontalHeaderLabels`). **Not imported by `main.py`.** |
 | `view/student_view.py` | The real window (`StudentView`). Builds the form, buttons, and list; handles add/update/delete/refresh. |
 | `features/calendar/dates.py` | `parse_date()` converts stored date text (`MM/DD/YYYY`) into a real `date`, returning `None` if it can't. |
-| `features/calendar/colors.py` | Maps a schedule type to its background/foreground colors. Handles case, spacing, and aliases (`homework` → assignment). |
+| `features/calendar/colors.py` | Maps a schedule category to its background/foreground colors. Handles case, spacing, and aliases (`homework` → assignment). Falls back to deterministic colors for custom categories. |
+| `features/categories/` | Category management feature (model/repository/service/view). Creates the `categories` table and feeds the dropdown in Schedules. |
 | `features/calendar/view.py` | `CalendarView`. Builds the calendar, color-codes dates, and lists the selected day's schedules. |
 | `features/calendar/` | The calendar feature package. Depends on the existing model and database layers. |
 
@@ -273,12 +281,12 @@ sqlite3 data/schedule.db ".tables"
    - **Title** (required), e.g. `Calculus Final`
    - **Date** as `MM/DD/YYYY`, e.g. `05/20/2027`
    - **Time** as 24-hour `HH:MM`, e.g. `09:00`
-   - **Type**, e.g. `Exam`, `Activity`, `Assignment`
+   - **Category**, e.g. `Exam`, `Activity`, `Assignment` (or a custom one from the Categories tab)
    - **Description** (optional)
    - Click **Add Schedule**, or press `Enter` in the Title field
 
 3. **View.** Saved schedules appear in the list at the bottom as
-   `Title | Date | Time | Type | Description`.
+   `Title | Date | Time | Category | Description`.
 
 4. **Update**
    - Click a schedule to select it.
@@ -291,7 +299,7 @@ sqlite3 data/schedule.db ".tables"
    - Confirm in the dialog. **Yes** deletes, **No** cancels.
 
 6. **See the calendar.** Click the **Calendar** tab.
-   - Each date with a schedule is **color-coded by type** (see the legend at the bottom).
+   - Each date with a schedule is **color-coded by category** (see the legend at the bottom).
    - Dates with more than one schedule are **grey**, and hovering shows how many and which types.
    - Click any date to list that day's schedules below, sorted by time.
    - Use the arrows to move between months.
@@ -322,13 +330,17 @@ StudentView (GUI)  →  StudentService (logic)  →  ScheduleRepository (SQL)  �
 
 | Class | File | Type / Base | Responsibility |
 |-------|------|-------------|----------------|
-| `Schedule` | `features/schedule/model.py` | `@dataclass` | Data of **one** schedule: `title`, `date`, `time`, `typ`, `desc`, `id`. |
-| `Database` | `data/data.py` | Plain class | Owns the DB path, opens connections, creates the table. |
-| `ScheduleRepository` | `features/schedule/repository.py` | Plain class | Executes **all** SQL. Converts rows → `Schedule`. |
+| `Schedule` | `features/schedule/model.py` | `@dataclass` | Data of **one** schedule: `title`, `date`, `time`, `category`, `desc`, `id`. |
+| `Database` | `data/data.py` | Plain class | Owns the DB path, opens connections, creates the tables. |
+| `ScheduleRepository` | `features/schedule/repository.py` | Plain class | Executes **all** schedule SQL. Converts rows → `Schedule`. |
 | `ScheduleService` | `features/schedule/service.py` | Plain class | Business-logic facade for the original CLI/early GUI. |
 | `StudentService` | `features/schedule/service.py` | Plain class | Business-logic facade for the current GUI. |
 | `StudentView` | `view/student_view.py` | **inherits `QWidget`** | The Schedules tab; builds widgets, handles actions. |
 | `CalendarView` | `features/calendar/view.py` | **inherits `QWidget`** | The Calendar tab; color-codes dates, lists the selected day. |
+| `Category` | `features/categories/model.py` | `@dataclass` | Data of **one** category: `name`, `id`. |
+| `CategoryRepository` | `features/categories/repository.py` | Plain class | Executes **all** category SQL. |
+| `CategoryService` | `features/categories/service.py` | Plain class | Business-logic facade for categories. |
+| `CategoryView` | `features/categories/view.py` | **inherits `QWidget`** | The Categories tab; add/update/delete categories. |
 | `ScheduleView` | `features/schedule/view.py` | **inherits `QWidget`** | Unused early GUI attempt. |
 | `Bridge` | `main.py` | **inherits `QObject`** | Holds Qt signals for the commented-out CLI thread. |
 
@@ -359,8 +371,8 @@ Every layer keeps its own responsibility private and exposes a small public inte
   def add(self, schedule: Schedule) -> Schedule:
       with self.database.connect() as connection:
           cursor = connection.execute(
-              "INSERT INTO schedule (title, date, time, type, desc) VALUES (?, ?, ?, ?, ?)",
-              (schedule.title, schedule.date, schedule.time, schedule.typ, schedule.desc),
+              "INSERT INTO schedule (title, date, time, category, desc) VALUES (?, ?, ?, ?, ?)",
+              (schedule.title, schedule.date, schedule.time, schedule.category, schedule.desc),
           )
           schedule.id = cursor.lastrowid
       return schedule
@@ -472,19 +484,31 @@ single-user desktop app.
 
 ### Structure
 
-One table, created by `Database.create_table()` in `data/data.py` using
+Two tables, created by `Database.create_table()` in `data/data.py` using
 `CREATE TABLE IF NOT EXISTS`. It's built automatically on first run, so there is no manual setup.
 
 ```sql
 CREATE TABLE IF NOT EXISTS schedule (
-    id    INTEGER PRIMARY KEY AUTOINCREMENT,  -- auto-generated unique key
-    title TEXT,                              -- required, e.g. 'Calculus Final'
-    date  TEXT,                              -- stored as text, format MM/DD/YYYY
-    time  TEXT,                              -- stored as text, format HH:MM
-    type  TEXT,                              -- e.g. 'Exam', 'Activity', 'Assignment'
-    desc  TEXT                               -- optional description
+    id       INTEGER PRIMARY KEY AUTOINCREMENT,  -- auto-generated unique key
+    title    TEXT,                               -- required, e.g. 'Calculus Final'
+    date     TEXT,                               -- stored as text, format MM/DD/YYYY
+    time     TEXT,                               -- stored as text, format HH:MM
+    category TEXT,                               -- e.g. 'Exam', 'Activity', 'Assignment'
+    desc     TEXT                                -- optional description
+);
+
+CREATE TABLE IF NOT EXISTS categories (
+    id   INTEGER PRIMARY KEY AUTOINCREMENT,      -- auto-generated unique key
+    name TEXT UNIQUE NOT NULL                    -- e.g. 'Final Exam', 'Lab'
 );
 ```
+
+### Table: `categories`
+
+| Column | Type | Constraint | Description |
+|--------|--------|------------|-------------|
+| `id` | INTEGER | **PRIMARY KEY AUTOINCREMENT** | Unique ID. |
+| `name` | TEXT | UNIQUE NOT NULL | Category name (e.g., Final Exam, Lab, Presentation). |
 
 ### Table: `schedule`
 
@@ -494,7 +518,7 @@ CREATE TABLE IF NOT EXISTS schedule (
 | `title` | TEXT | validated in GUI, not empty | Name of the schedule. |
 | `date` | TEXT | none | Entered as `MM/DD/YYYY`. |
 | `time` | TEXT | none | Entered as `HH:MM`. |
-| `type` | TEXT | none | Category: Exam, Activity, Assignment, Quiz, etc. |
+| `category` | TEXT | none | Category: Exam, Activity, Assignment, Quiz, or a custom one from Categories. |
 | `desc` | TEXT | none | Optional extra details. |
 
 > **Why SQLite?** No install, no server, no config, just one file. For a personal, offline,
@@ -515,7 +539,7 @@ CREATE TABLE IF NOT EXISTS schedule (
 │ title  TEXT                              │  ← entered by the user
 │ date   TEXT                              │  ← entered by the user
 │ time   TEXT                              │  ← entered by the user
-│ type   TEXT                              │  ← entered by the user
+│ category TEXT                            │  ← entered by the user
 │ desc   TEXT                              │  ← entered by the user (optional)
 └─────────────────────────────────────────┘
         ▲                    ▲
@@ -538,10 +562,10 @@ Called by **Add Schedule**.
 ```python
 cursor = connection.execute(
     """
-    INSERT INTO schedule (title, date, time, type, desc)
+    INSERT INTO schedule (title, date, time, category, desc)
     VALUES (?, ?, ?, ?, ?)
     """,
-    (schedule.title, schedule.date, schedule.time, schedule.typ, schedule.desc),
+    (schedule.title, schedule.date, schedule.time, schedule.category, schedule.desc),
 )
 schedule.id = cursor.lastrowid    # SQLite assigns the new primary key
 ```
@@ -551,7 +575,7 @@ Called by **Update Selected** to fill the form.
 
 ```python
 row = connection.execute(
-    "SELECT id, title, date, time, type, desc FROM schedule WHERE id = ?",
+    "SELECT id, title, date, time, category, desc FROM schedule WHERE id = ?",
     (schedule_id,),
 ).fetchone()
 ```
@@ -564,7 +588,7 @@ Called by `StudentView.refresh()` on startup and after every change.
 
 ```python
 rows = connection.execute(
-    "SELECT id, title, date, time, type, desc FROM schedule"
+    "SELECT id, title, date, time, category, desc FROM schedule"
 ).fetchall()
 ```
 
@@ -577,10 +601,10 @@ Called by **Save Changes** while a record is loaded.
 connection.execute(
     """
     UPDATE schedule
-    SET title = ?, date = ?, time = ?, type = ?, desc = ?
+    SET title = ?, date = ?, time = ?, category = ?, desc = ?
     WHERE id = ?
     """,
-    (schedule.title, schedule.date, schedule.time, schedule.typ, schedule.desc, schedule.id),
+    (schedule.title, schedule.date, schedule.time, schedule.category, schedule.desc, schedule.id),
 )
 ```
 
@@ -598,7 +622,7 @@ work against this table:
 
 ```python
 connection.execute(
-    "SELECT id, title, date, time, type, desc FROM schedule WHERE title LIKE ?",
+    "SELECT id, title, date, time, category, desc FROM schedule WHERE title LIKE ?",
     (f"%{keyword}%",),
 ).fetchall()
 ```
@@ -667,7 +691,7 @@ the selected record, not create a new one.*
 
 ![Screenshot 7](screenshots/07-calendar-color-coded.png)
 
-*The calendar tab. Each date is colored by its schedule type, grey means several types that day,
+*The calendar tab. Each date is colored by its schedule category, grey means several categories that day,
 and clicking a date lists its schedules sorted by time.*
 
 ---
@@ -734,7 +758,7 @@ Tested headless against an isolated database file, exercising `parse_date`, `col
 |---|---------|-------|----------|--------|
 | 9 | **Date parsing** | `parse_date("04/20/2027")`, `" 8/4/2027 "`, `"2027-08-04"` | Correct `date` objects | **PASS**: all three parsed (single-digit months/days work) |
 | 10 | **Bad dates skipped** | `parse_date("99/99/2027")`, `"banana"`, `""` | `None`, never a crash | **PASS**: all returned `None` |
-| 11 | **Color by type** | `color_pair("quiz")`, `"EXAM"`, `"homework"`, `"banana"` | Correct color per type | **PASS**: quiz orange, exam red, `homework`→assignment blue, unknown grey |
+| 11 | **Color by category** | `color_pair("quiz")`, `"EXAM"`, `"homework"`, `"banana"` | Correct color per category | **PASS**: quiz orange, exam red, `homework`→assignment blue, custom/unknown deterministic |
 | 12 | **Grouping by day** | Add 5 schedules, 1 with an invalid date | 3 valid day-groups; invalid skipped | **PASS**: `2027-05-20` (2), `2027-06-01` (1), `2027-07-04` (1) |
 | 13 | **Day detail sorted** | Select `05/20/2027` (09:00 exam, 13:00 assignment) | Table shows 2 rows, earliest time first | **PASS**: 09:00 Exam, then 13:00 Assignment |
 | 14 | **Empty day** | Select `05/21/2027` | Label shows 0, table empty | **PASS**: 0 rows, no error |
@@ -771,14 +795,14 @@ Tested headless against an isolated database file, exercising `parse_date`, `col
 
 ### Known weaknesses
 
-8. **No validation on date, time, or type.** Only the title is checked. `32/45/2027` and
+8. **No validation on date, time, or category.** Only the title is checked. `32/45/2027` and
    `99:99` are accepted and stored as text, so a bad date silently disappears from the calendar
    because `parse_date()` returns `None` for it. Needs validation or a date-picker.
-9. **`type` is still free text.** The calendar copes by normalizing case and mapping aliases
-   (`homework` → assignment), and unknown types fall back to grey. But `exam`, `Exam`, and
-   `EXAM` are still three separate strings. A `QComboBox` dropdown on the add form would fix
-   this properly and guarantee every type has a color.
-10. **Multi-type days lose their color.** A date with more than one schedule type is drawn
+9. **Category spelling (addressed).** The add form now uses an editable `QComboBox` fed by the
+   Categories tab, so `exam`, `Exam`, and `EXAM` no longer become three separate strings. The
+   calendar still normalizes case and maps aliases (`homework` → assignment) for old records,
+   and unknown categories fall back to a deterministic color.
+10. **Multi-category days lose their color.** A date with more than one schedule category is drawn
     grey, because a single date cell can only hold one background color. A side-by-side list
     of chips per day would show all its colors at once.
 11. **Inconsistent naming.** Classes are `StudentView` and `StudentService` but manage

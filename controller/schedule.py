@@ -11,12 +11,12 @@ def get_schedule():
         title = input("Title: ")
         date = input("Date (MM/DD/YYYY): ")
         time = input("Time (HH:MM): ")
-        typ = input("Type (Ex. Activity/Exam): ")
+        category = input("Category (Ex. Activity/Exam): ")
         desc = input("Descripiton (Opitonal): ")
         choose = input("\n1.Save \n2.Reenter \n3.Exit \n\nChoose: ")
 
         if choose == "1":
-            repository.add(Schedule(title, date, time, typ, desc))
+            repository.add(Schedule(title, date, time, category, desc))
             print("Saved.")
             break
         elif choose == "2":
@@ -55,5 +55,5 @@ def show_schedule():
         return
     for i, item in enumerate(schedules):
         print(
-            f"{i + 1}. {item.title} | {item.date} | {item.time} | {item.typ} | {item.desc}"
+            f"{i + 1}. {item.title} | {item.date} | {item.time} | {item.category} | {item.desc}"
         )
